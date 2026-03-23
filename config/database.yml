@@ -56,7 +56,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] %>   # この行があればOK
+  url: <%= ENV["DATABASE_URL"] %>
   database: kakeibo_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
@@ -88,9 +88,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: kakeibo_app_production
-    username: kakeibo_app
-    password: <%= ENV["KAKEIBO_APP_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *primary_production
     database: kakeibo_app_production_cache
