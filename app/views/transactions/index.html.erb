@@ -1,0 +1,36 @@
+<h1>収支一覧</h1>
+
+<%= link_to "新規登録", new_transaction_path %>
+
+<% if notice %>
+  <p><%= notice %></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>日付</th>
+      <th>種別</th>
+      <th>金額</th>
+      <th>メモ</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.date %></td>
+        <td><%= transaction.transaction_type == "income" ? "収入" : "支出" %></td>
+        <td><%= number_with_delimiter(transaction.amount) %>円</td>
+        <td><%= transaction.memo %></td>
+        <td>
+          <%= link_to "編集", edit_transaction_path(transaction) %>
+          <%= button_to "削除", transaction_path(transaction),
+                method: :delete,
+                data: { turbo_confirm: "削除しますか？" },
+                form: { style: "display:inline" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
