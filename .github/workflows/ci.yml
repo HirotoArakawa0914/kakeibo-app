@@ -5,29 +5,14 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: kakeibo_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:password@localhost:5432/kakeibo_test
 
     steps:
       - name: コードをチェックアウト
@@ -36,8 +21,8 @@ jobs:
       - name: Rubyをセットアップ
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version   # プロジェクトの.ruby-versionを参照
-          bundler-cache: true           # Gemをキャッシュして高速化
+          ruby-version: .ruby-version
+          bundler-cache: true
 
       - name: DBを作成してマイグレーション実行
         run: |
@@ -46,3 +31,16 @@ jobs:
 
       - name: テストを実行
         run: bundle exec rails test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Renderへデプロイ
+        run: |
+          curl -X POST \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json"
