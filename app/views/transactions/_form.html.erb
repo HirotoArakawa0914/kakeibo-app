@@ -1,0 +1,33 @@
+<%= form_with model: transaction do |f| %>
+  <% if transaction.errors.any? %>
+    <div>
+      <% transaction.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :transaction_type, "種別" %>
+    <%= f.select :transaction_type,
+          [["収入", "income"], ["支出", "expense"]],
+          { include_blank: "選択してください" } %>
+  </div>
+
+  <div>
+    <%= f.label :amount, "金額（円）" %>
+    <%= f.number_field :amount, min: 1 %>
+  </div>
+
+  <div>
+    <%= f.label :date, "日付" %>
+    <%= f.date_field :date %>
+  </div>
+
+  <div>
+    <%= f.label :memo, "メモ" %>
+    <%= f.text_field :memo %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

@@ -1,0 +1,9 @@
+<h1>収支詳細</h1>
+
+<p>日付: <%= @transaction.date %></p>
+<p>種別: <%= @transaction.transaction_type == "income" ? "収入" : "支出" %></p>
+<p>金額: <%= number_with_delimiter(@transaction.amount) %>円</p>
+<p>メモ: <%= @transaction.memo %></p>
+
+<%= link_to "編集", edit_transaction_path(@transaction) %>
+<%= link_to "一覧に戻る", transactions_path %>
