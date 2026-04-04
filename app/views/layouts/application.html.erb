@@ -24,6 +24,12 @@
   </head>
 
   <body>
+    <nav style="padding: 12px; background: #f5f5f5; margin-bottom: 24px;">
+      <%= link_to "ダッシュボード", dashboard_path, style: "margin-right: 16px;" %>
+      <%= link_to "収支一覧", transactions_path, style: "margin-right: 16px;" %>
+      <%= link_to "カテゴリ管理", categories_path, style: "margin-right: 16px;" %>
+    </nav>
+
     <%= yield %>
   </body>
 </html>
