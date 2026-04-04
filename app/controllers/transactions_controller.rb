@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
     before_action :set_transaction, only: %i[show edit update destroy]
 
     def index
-        @transactions = Transaction.recent
+        @transactions = Transaction.includes(:category).recent
     end
 
     def show
@@ -10,6 +10,7 @@ class TransactionsController < ApplicationController
 
     def new
         @transaction = Transaction.new
+        @categories = Category.ordered
     end
 
     def create
@@ -22,6 +23,7 @@ class TransactionsController < ApplicationController
     end
 
     def edit
+        @categories = Category.ordered
     end
 
     def update
@@ -45,7 +47,7 @@ class TransactionsController < ApplicationController
 
     def transaction_params
         params.require(:transaction).permit(
-            :transaction_type, :amount, :date, :memo
+            :transaction_type, :amount, :date, :memo, :category_id
         )
     end
 end
