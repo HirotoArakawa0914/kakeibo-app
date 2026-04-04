@@ -1,0 +1,39 @@
+<h1>カテゴリ一覧</h1>
+
+<%= link_to "新規登録", new_category_path %>
+
+<% if notice %>
+  <p><%= notice %></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>カテゴリ名</th>
+      <th>カラー</th>
+      <th>アイコン</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td>
+          <span style="display:inline-block; width:16px; height:16px;
+                       background-color:<%= category.color %>; border-radius:50%;
+                       vertical-align:middle; margin-right:6px;"></span>
+          <%= category.name %>
+        </td>
+        <td><%= category.color %></td>
+        <td><%= category.icon %></td>
+        <td>
+          <%= link_to "編集", edit_category_path(category) %>
+          <%= button_to "削除", category_path(category),
+                method: :delete,
+                data: { turbo_confirm: "削除しますか？" },
+                form: { style: "display:inline" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
