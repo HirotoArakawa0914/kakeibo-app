@@ -1,0 +1,26 @@
+<%= form_with model: category do |f| %>
+  <% if category.errors.any? %>
+    <div>
+      <% category.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, "カテゴリ名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :color, "カラー" %>
+    <%= f.color_field :color %>
+  </div>
+
+  <div>
+    <%= f.label :icon, "アイコン（任意）" %>
+    <%= f.text_field :icon %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

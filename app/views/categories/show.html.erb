@@ -1,0 +1,13 @@
+<h1>カテゴリ詳細</h1>
+
+<p>カテゴリ名: <%= @category.name %></p>
+<p>カラー:
+  <span style="display:inline-block; width:16px; height:16px;
+               background-color:<%= @category.color %>; border-radius:50%;
+               vertical-align:middle;"></span>
+  <%= @category.color %>
+</p>
+<p>アイコン: <%= @category.icon %></p>
+
+<%= link_to "編集", edit_category_path(@category) %>
+<%= link_to "一覧に戻る", categories_path %>
