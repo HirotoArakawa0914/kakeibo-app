@@ -1,6 +1,6 @@
 class ReceiptsController < ApplicationController
   before_action :set_transaction, only: [:new, :create]
-  before_action :set_receipt, only: [:show, :destroy]
+  before_action :set_receipt, only: [:show, :destroy, :ocr]
 
   def new
     @receipt = Receipt.new
@@ -11,7 +11,7 @@ class ReceiptsController < ApplicationController
     @receipt.ledger_transaction = @transaction
 
     if @receipt.save
-      redirect_to @transaction, notice: "レシートをアップロードしました"
+      redirect_to transaction_path(@transaction), notice: "レシートをアップロードしました"
     else
       render :new, status: :unprocessable_entity
     end
@@ -21,8 +21,14 @@ class ReceiptsController < ApplicationController
   end
 
   def destroy
+    transaction = @receipt.ledger_transaction
     @receipt.destroy
-    redirect_to @receipt.ledger_transaction, notice: "レシートを削除しました"
+    redirect_to transaction_path(transaction), notice: "レシートを削除しました"
+  end
+
+  def ocr
+    @receipt.perform_ocr!
+    redirect_to receipt_path(@receipt), notice: "OCR処理を実行しました"
   end
 
   private
