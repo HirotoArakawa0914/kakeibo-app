@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   end
 
   resources :categories
-  resources :receipts, only: [:show, :destroy]
+  resources :receipts, only: [:show, :destroy] do
+    member do
+      post :ocr
+    end
+  end
 
   get "dashboard", to: "dashboard#index", as: :dashboard
   get "up" => "rails/health#show", as: :rails_health_check

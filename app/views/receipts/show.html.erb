@@ -1,9 +1,22 @@
 <h1>レシート詳細</h1>
 
-<p>ステータス: <%= @receipt.status %></p>
+<p>ステータス:
+  <%= case @receipt.status
+      when "pending"    then "未処理"
+      when "processing" then "処理中"
+      when "done"       then "完了"
+      when "failed"     then "失敗"
+      end %>
+</p>
 
 <% if @receipt.image.attached? %>
   <%= image_tag @receipt.image, style: "max-width: 400px;" %>
+<% end %>
+
+<% if @receipt.pending? || @receipt.failed? %>
+  <%= button_to "OCRを実行する", ocr_receipt_path(@receipt),
+        method: :post,
+        data: { turbo_confirm: "OCR処理を実行しますか？" } %>
 <% end %>
 
 <% if @receipt.raw_text.present? %>
