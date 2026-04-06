@@ -1,6 +1,7 @@
 class Transaction < ApplicationRecord
   # association
   belongs_to :category, optional: true
+  has_one :receipt, foreign_key: "transaction_id", dependent: :destroy
 
   # validation
   validates :transaction_type, presence: true,
