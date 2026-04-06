@@ -1,0 +1,16 @@
+<h1>レシート詳細</h1>
+
+<p>ステータス: <%= @receipt.status %></p>
+
+<% if @receipt.image.attached? %>
+  <%= image_tag @receipt.image, style: "max-width: 400px;" %>
+<% end %>
+
+<% if @receipt.raw_text.present? %>
+  <h2>OCR抽出テキスト</h2>
+  <pre><%= @receipt.raw_text %></pre>
+<% end %>
+
+<%= button_to "削除", receipt_path(@receipt),
+      method: :delete,
+      data: { turbo_confirm: "削除しますか？" } %>

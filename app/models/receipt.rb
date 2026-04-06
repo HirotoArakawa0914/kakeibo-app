@@ -4,6 +4,9 @@ class Receipt < ApplicationRecord
              foreign_key: "transaction_id",
              optional: true
 
+  # デフォルト値
+  attribute :status, :string, default: "pending"
+
   # status
   STATUSES = %w[pending processing done failed].freeze
   validates :status, inclusion: { in: STATUSES }
