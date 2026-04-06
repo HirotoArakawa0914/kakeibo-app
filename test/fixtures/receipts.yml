@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  transaction_id: 1
+  image_path: MyString
+  raw_text: MyText
+  parsed_data: MyText
+  status: MyString
+
+two:
+  transaction_id: 1
+  image_path: MyString
+  raw_text: MyText
+  parsed_data: MyText
+  status: MyString

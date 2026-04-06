@@ -39,3 +39,5 @@ db/test.sqlite3-wal
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
+
+/config/gcloud-vision.json
