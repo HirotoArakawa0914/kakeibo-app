@@ -1,0 +1,18 @@
+<h1>レシートアップロード</h1>
+
+<%= form_with model: [@transaction, @receipt], enctype: "multipart/form-data" do |f| %>
+  <% if @receipt.errors.any? %>
+    <div>
+      <% @receipt.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :image, "レシート画像" %>
+    <%= f.file_field :image, accept: "image/*" %>
+  </div>
+
+  <%= f.submit "アップロード" %>
+<% end %>
