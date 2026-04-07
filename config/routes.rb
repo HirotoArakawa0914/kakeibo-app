@@ -1,10 +1,17 @@
 Rails.application.routes.draw do
-  get "dashboard/index"
   root "transactions#index"
-  resources :transactions
+
+  resources :transactions do
+    resources :receipts, only: [:new, :create], shallow: true
+  end
+
   resources :categories
+  resources :receipts, only: [:show, :destroy] do
+    member do
+      post :ocr
+    end
+  end
 
   get "dashboard", to: "dashboard#index", as: :dashboard
-
   get "up" => "rails/health#show", as: :rails_health_check
 end

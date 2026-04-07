@@ -33,6 +33,7 @@
         <td><%= number_with_delimiter(transaction.amount) %>円</td>
         <td><%= transaction.memo %></td>
         <td>
+          <%= link_to "詳細", transaction_path(transaction) %>
           <%= link_to "編集", edit_transaction_path(transaction) %>
           <%= button_to "削除", transaction_path(transaction),
                 method: :delete,
