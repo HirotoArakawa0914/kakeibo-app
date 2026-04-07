@@ -34,16 +34,13 @@ class Receipt < ApplicationRecord
     text = OcrService.new(image.blob).call
 
     if text.present?
-      update!(
-        raw_text: text,
-        status: "done"
-      )
+      update!(raw_text: text, status: "done")
     else
       update!(status: "failed")
     end
   rescue => e
     Rails.logger.error "Receipt OCR Error: #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")  # ← 追加
+    Rails.logger.error e.backtrace.join("\n")
     update!(status: "failed")
   end
 end

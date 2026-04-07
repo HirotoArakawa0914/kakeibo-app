@@ -27,8 +27,9 @@ class ReceiptsController < ApplicationController
   end
 
   def ocr
-    @receipt.perform_ocr!
-    redirect_to receipt_path(@receipt), notice: "OCR処理を実行しました"
+    @receipt.update!(status: "processing")
+    OcrProcessJob.perform_later(@receipt.id)
+    redirect_to receipt_path(@receipt), notice: "OCR処理を開始しました。しばらくお待ち下さい。"
   end
 
   private
