@@ -4,5 +4,11 @@ class DashboardController < ApplicationController
     @category_expense = Transaction.category_expense_summary
     @monthly_balance  = Transaction.monthly_balance_summary
     @daily_expense    = Transaction.daily_expense_summary
+
+    # AIアドバイス生成
+    @ai_advice = AiAdviceService.new(
+      monthly_expense:  @monthly_expense,
+      category_expense: @category_expense
+    ).call
   end
 end
