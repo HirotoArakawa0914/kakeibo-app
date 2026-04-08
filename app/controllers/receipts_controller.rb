@@ -32,6 +32,19 @@ class ReceiptsController < ApplicationController
     redirect_to receipt_path(@receipt), notice: "OCR処理を開始しました。しばらくお待ちください。"
   end
 
+  def upload
+    @receipt = Receipt.new
+    @receipt.image.attach(params[:image])
+
+    if @receipt.save
+      @receipt.update!(status: "processing")
+      OcrProcessJob.perform_later(@receipt.id)
+      redirect_to receipt_path(@receipt), notice: "レシートをアップロードしました。OCR処理中です。"
+    else
+      redirect_to new_transaction_path, alert: "アップロードに失敗しました。"
+    end
+  end
+
   def correct
     @parsed = @receipt.parsed_result
     @categories = Category.ordered
