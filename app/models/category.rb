@@ -6,6 +6,7 @@ class Category < ApplicationRecord
     
     # association(Phase2以降で有効化)
     has_many :transactions, dependent: :nullify
+    belongs_to :user, optional: true
 
     # scope
     scope :ordered, -> { order(:name) }
