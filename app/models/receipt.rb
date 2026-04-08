@@ -43,4 +43,9 @@ class Receipt < ApplicationRecord
     Rails.logger.error e.backtrace.join("\n")
     update!(status: "failed")
   end
+
+  def parsed_result
+    return {} unless raw_text.present?
+    OcrParser.new(raw_text).parse
+  end
 end
