@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   resources :receipts, only: [:show, :destroy] do
     member do
       post :ocr
+      get  :correct
+      post :register
     end
   end
 

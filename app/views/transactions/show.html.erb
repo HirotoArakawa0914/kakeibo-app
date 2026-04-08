@@ -3,10 +3,24 @@
 <p>日付: <%= @transaction.date %></p>
 <p>種別: <%= @transaction.transaction_type == "income" ? "収入" : "支出" %></p>
 <p>金額: <%= number_with_delimiter(@transaction.amount) %>円</p>
+<p>カテゴリ: <%= @transaction.category&.name || "未分類" %></p>
 <p>メモ: <%= @transaction.memo %></p>
 
+<hr>
+
+<h2>レシート</h2>
 <% if @transaction.receipt.present? %>
-  <p>レシート: <%= link_to "確認する", receipt_path(@transaction.receipt) %></p>
+  <p>
+    ステータス:
+    <%= case @transaction.receipt.status
+        when "pending"    then "未処理"
+        when "processing" then "処理中"
+        when "done"       then "完了"
+        when "failed"     then "失敗"
+        end %>
+  </p>
+  <%= link_to "レシートを確認する", receipt_path(@transaction.receipt) %>
 <% else %>
-  <p><%= link_to "レシートをアップロード", new_transaction_receipt_path(@transaction) %></p>
+  <p>レシートは登録されていません</p>
+  <%= link_to "レシートをアップロード", new_transaction_receipt_path(@transaction) %>
 <% end %>
