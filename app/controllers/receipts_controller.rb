@@ -35,18 +35,29 @@ class ReceiptsController < ApplicationController
   def correct
     @parsed = @receipt.parsed_result
     @categories = Category.ordered
-    @transaction_form = Transaction.new(
-      date:             @parsed[:date],
-      amount:           @parsed[:amount],
-      transaction_type: "expense",
-      memo:             @parsed[:store_name]
-    )
+
+    if @receipt.ledger_transaction.present?
+      @transaction_form = @receipt.ledger_transaction
+    else
+      @transaction_form = Transaction.new(
+        date:             @parsed[:date],
+        amount:           @parsed[:amount],
+        transaction_type: "expense",
+        memo:             @parsed[:store_name]
+      )
+    end
   end
 
   def register
-    @transaction = Transaction.new(register_params)
+    if @receipt.ledger_transaction.present?
+      @transaction = @receipt.ledger_transaction
+      success = @transaction.update(register_params)
+    else
+      @transaction = Transaction.new(register_params)
+      success = @transaction.save
+    end
 
-    if @transaction.save
+    if success
       @receipt.update!(
         ledger_transaction: @transaction,
         status: "done"

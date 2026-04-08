@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
     before_action :set_transaction, only: %i[show edit update destroy]
 
     def index
-        @transactions = Transaction.includes(:category).recent
+        @transactions = Transaction.includes(:category, :receipt).recent
     end
 
     def show
@@ -18,6 +18,7 @@ class TransactionsController < ApplicationController
         if @transaction.save
             redirect_to transactions_path, notice: "収支を登録しました"
         else
+            @categories = Category.ordered
             render :new, status: :unprocessable_entity
         end
     end
@@ -28,8 +29,9 @@ class TransactionsController < ApplicationController
 
     def update
         if @transaction.update(transaction_params)
-            redirect_to transactions_path, notice: "収支を登録しました"
+            redirect_to transactions_path, notice: "収支を更新しました"
         else
+            @categories = Category.ordered
             render :edit, status: :unprocessable_entity
         end
     end
