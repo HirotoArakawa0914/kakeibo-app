@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   end
 
   resources :categories
+
+  post "receipts/upload", to: "receipts#upload", as: :upload_receipt
+
   resources :receipts, only: [:show, :destroy] do
     member do
       post :ocr
