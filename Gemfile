@@ -71,3 +71,5 @@ gem "google-cloud-vision", "~> 1.3"
 gem "active_storage_validations"
 
 gem "dotenv-rails", groups: [:development, :test]
+
+gem "anthropic", "~> 1.0"
