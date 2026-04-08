@@ -1,6 +1,6 @@
 class ReceiptsController < ApplicationController
   before_action :set_transaction, only: [:new, :create]
-  before_action :set_receipt, only: [:show, :destroy, :ocr]
+  before_action :set_receipt, only: [:show, :destroy, :ocr, :correct, :register]
 
   def new
     @receipt = Receipt.new
@@ -29,7 +29,35 @@ class ReceiptsController < ApplicationController
   def ocr
     @receipt.update!(status: "processing")
     OcrProcessJob.perform_later(@receipt.id)
-    redirect_to receipt_path(@receipt), notice: "OCR処理を開始しました。しばらくお待ち下さい。"
+    redirect_to receipt_path(@receipt), notice: "OCR処理を開始しました。しばらくお待ちください。"
+  end
+
+  def correct
+    @parsed = @receipt.parsed_result
+    @categories = Category.ordered
+    @transaction_form = Transaction.new(
+      date:             @parsed[:date],
+      amount:           @parsed[:amount],
+      transaction_type: "expense",
+      memo:             @parsed[:store_name]
+    )
+  end
+
+  def register
+    @transaction = Transaction.new(register_params)
+
+    if @transaction.save
+      @receipt.update!(
+        ledger_transaction: @transaction,
+        status: "done"
+      )
+      redirect_to transaction_path(@transaction), notice: "収支データを登録しました"
+    else
+      @parsed = @receipt.parsed_result
+      @categories = Category.ordered
+      @transaction_form = @transaction
+      render :correct, status: :unprocessable_entity
+    end
   end
 
   private
@@ -44,5 +72,11 @@ class ReceiptsController < ApplicationController
 
   def receipt_params
     params.require(:receipt).permit(:image)
+  end
+
+  def register_params
+    params.require(:transaction).permit(
+      :transaction_type, :amount, :date, :memo, :category_id
+    )
   end
 end
