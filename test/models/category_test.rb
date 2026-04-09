@@ -4,7 +4,7 @@ class CategoryTest < ActiveSupport::TestCase
   # 正常系
   test "有効なデータで保存できる" do
     category = Category.new(
-      name: "食費",
+      name: "娯楽費",
       color: "#FF5733"
     )
     assert category.valid?
@@ -12,7 +12,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "アイコンなしでも有効" do
     category = Category.new(
-      name: "交通費",
+      name: "医療費",
       color: "#33FF57",
       icon: nil
     )
@@ -30,6 +30,7 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
   test "nameが重複していると無効" do
+    Category.delete_all
     Category.create!(name: "食費", color: "#FF5733")
     category = Category.new(name: "食費", color: "#33FF57")
     assert_not category.valid?
@@ -39,7 +40,7 @@ class CategoryTest < ActiveSupport::TestCase
   # color のバリデーション
   test "colorが空だと無効" do
     category = Category.new(
-      name: "食費",
+      name: "娯楽費",
       color: nil
     )
     assert_not category.valid?
@@ -48,7 +49,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "colorが不正な形式だと無効" do
     category = Category.new(
-      name: "食費",
+      name: "娯楽費",
       color: "red"
     )
     assert_not category.valid?
@@ -56,7 +57,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "colorが#で始まる6桁の16進数だと有効" do
     category = Category.new(
-      name: "食費",
+      name: "娯楽費",
       color: "#FF5733"
     )
     assert category.valid?
@@ -72,6 +73,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   # アソシエーションのテスト
   test "カテゴリ削除時にTransactionのcategory_idがnullになる" do
+    Category.delete_all
     category = Category.create!(name: "食費", color: "#FF5733")
     transaction = Transaction.create!(
       transaction_type: "expense",
