@@ -1,39 +1,52 @@
-<h1>カテゴリ一覧</h1>
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold text-gray-800">カテゴリ管理</h1>
+  <%= link_to "＋ 新規登録", new_category_path,
+        class: "px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg
+                hover:bg-indigo-700 transition" %>
+</div>
 
-<%= link_to "新規登録", new_category_path %>
-
-<% if notice %>
-  <p><%= notice %></p>
-<% end %>
-
-<table>
-  <thead>
-    <tr>
-      <th>カテゴリ名</th>
-      <th>カラー</th>
-      <th>アイコン</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @categories.each do |category| %>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 border-b border-gray-200">
       <tr>
-        <td>
-          <span style="display:inline-block; width:16px; height:16px;
-                       background-color:<%= category.color %>; border-radius:50%;
-                       vertical-align:middle; margin-right:6px;"></span>
-          <%= category.name %>
-        </td>
-        <td><%= category.color %></td>
-        <td><%= category.icon %></td>
-        <td>
-          <%= link_to "編集", edit_category_path(category) %>
-          <%= button_to "削除", category_path(category),
-                method: :delete,
-                data: { turbo_confirm: "削除しますか？" },
-                form: { style: "display:inline" } %>
-        </td>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">カテゴリ名</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">カラー</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アイコン</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">操作</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <% @categories.each do |category| %>
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-4 py-3">
+            <span class="inline-flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full"
+                    style="background-color: <%= category.color %>"></span>
+              <span class="font-medium text-gray-800"><%= category.name %></span>
+            </span>
+          </td>
+          <td class="px-4 py-3 text-gray-500"><%= category.color %></td>
+          <td class="px-4 py-3 text-gray-500"><%= category.icon %></td>
+          <td class="px-4 py-3 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <%= link_to "編集", edit_category_path(category),
+                    class: "text-xs text-gray-500 hover:text-indigo-600 transition" %>
+              <%= button_to "削除", category_path(category),
+                    method: :delete,
+                    data: { turbo_confirm: "削除しますか？" },
+                    class: "text-xs text-gray-500 hover:text-red-500 transition
+                            bg-transparent border-0 cursor-pointer p-0" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @categories.empty? %>
+    <div class="text-center py-12 text-gray-400">
+      <p class="text-lg mb-2">カテゴリがまだありません</p>
+      <p class="text-sm">「＋ 新規登録」から追加してください</p>
+    </div>
+  <% end %>
+</div>

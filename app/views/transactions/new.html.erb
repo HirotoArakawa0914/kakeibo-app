@@ -1,27 +1,32 @@
-<h1>収支登録</h1>
+<h1 class="text-2xl font-bold text-gray-800 mb-6">収支登録</h1>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+<div class="grid grid-cols-2 gap-6">
 
   <%# 手動入力 %>
-  <div style="border: 1px solid #ddd; border-radius: 8px; padding: 24px;">
-    <h2>手動入力</h2>
-    <p style="color: #888; font-size: 13px;">日付・金額・カテゴリを直接入力して登録します。</p>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-700 mb-1">手動入力</h2>
+    <p class="text-xs text-gray-400 mb-5">日付・金額・カテゴリを直接入力して登録します</p>
     <%= render "form", transaction: @transaction %>
   </div>
 
   <%# OCRで登録 %>
-  <div style="border: 1px solid #ddd; border-radius: 8px; padding: 24px;">
-    <h2>レシートから登録（OCR）</h2>
-    <p style="color: #888; font-size: 13px;">レシートを撮影・アップロードしてOCRで自動入力します。</p>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-700 mb-1">レシートから登録（OCR）</h2>
+    <p class="text-xs text-gray-400 mb-5">レシートをアップロードしてOCRで自動入力します</p>
 
-    <%= form_with url: upload_receipt_path, method: :post, multipart: true do |f| %>
-      <div style="margin-bottom: 16px;">
-        <%= f.label :image, "レシート画像を選択" %>
+    <%= form_with url: upload_receipt_path, method: :post,
+                  multipart: true, class: "space-y-4" do |f| %>
+      <div>
+        <%= f.label :image, "レシート画像を選択",
+              class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.file_field :image, accept: "image/*",
-              style: "display: block; margin-top: 8px;" %>
+              class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                      file:rounded-lg file:border-0 file:text-sm file:font-medium
+                      file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
       </div>
       <%= f.submit "アップロードしてOCR開始",
-            style: "padding: 8px 16px; cursor: pointer;" %>
+            class: "w-full py-2 px-4 bg-indigo-600 text-white text-sm font-medium
+                    rounded-lg hover:bg-indigo-700 transition cursor-pointer" %>
     <% end %>
   </div>
 
