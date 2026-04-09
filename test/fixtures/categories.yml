@@ -1,13 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  name: MyString
-  color: MyString
-  icon: MyString
-  user_id: 1
+  name: 食費
+  color: "#FF5733"
+  icon: food
+  user: one
 
 two:
-  name: MyString
-  color: MyString
-  icon: MyString
-  user_id: 1
+  name: 交通費
+  color: "#33FF57"
+  icon: transport
+  user: one
