@@ -1,62 +1,55 @@
-<h1>ダッシュボード</h1>
+<h1 class="text-2xl font-bold text-gray-800 mb-6">ダッシュボード</h1>
 
+<%# AIアドバイスパネル %>
+<% if @ai_advice.present? %>
+  <div class="mb-6 p-5 bg-indigo-50 border border-indigo-200 rounded-xl">
+    <h2 class="text-sm font-semibold text-indigo-700 mb-2">💡 AIアドバイス</h2>
+    <div class="text-sm text-indigo-900 leading-relaxed whitespace-pre-wrap"><%= @ai_advice %></div>
+  </div>
+<% end %>
+
+<%# グラフエリア %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+<div class="grid grid-cols-2 gap-6">
 
   <%# 月別支出合計 %>
-  <div>
-    <h2>月別支出合計</h2>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-700 mb-4">月別支出合計</h2>
     <canvas id="monthlyExpenseChart"></canvas>
   </div>
 
   <%# カテゴリ別内訳 %>
-  <div>
-    <h2>カテゴリ別支出（当月）</h2>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-700 mb-4">カテゴリ別支出（当月）</h2>
     <% if @category_expense.empty? %>
-      <p style="color: #888;">当月のデータがありません</p>
+      <p class="text-sm text-gray-400 text-center py-8">当月のデータがありません</p>
     <% else %>
-      <div style="max-width: 300px; margin: 0 auto;">
+      <div style="max-width: 280px; margin: 0 auto;">
         <canvas id="categoryExpenseChart"></canvas>
       </div>
     <% end %>
   </div>
 
   <%# 収支バランス %>
-  <div>
-    <h2>収支バランス（過去6ヶ月）</h2>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-700 mb-4">収支バランス（過去6ヶ月）</h2>
     <canvas id="monthlyBalanceChart"></canvas>
   </div>
 
   <%# 日別推移 %>
-  <div>
-    <h2>日別支出推移（当月）</h2>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-700 mb-4">日別支出推移（当月）</h2>
     <% if @daily_expense.empty? %>
-      <p style="color: #888;">当月のデータがありません</p>
+      <p class="text-sm text-gray-400 text-center py-8">当月のデータがありません</p>
     <% else %>
       <canvas id="dailyExpenseChart"></canvas>
     <% end %>
   </div>
-  
-  <%# AIアドバイスパネル %>
-  <div style="margin-top: 24px; padding: 20px; background: #f0f7ff;
-              border-radius: 8px; border-left: 4px solid #3b82f6;">
-    <h2 style="margin: 0 0 12px; font-size: 16px; color: #1e40af;">
-      💡 AIアドバイス
-    </h2>
-    <% if @ai_advice.present? %>
-      <div style="white-space: pre-wrap; line-height: 1.6; color: #1e3a5f;">
-        <%= @ai_advice %>
-      </div>
-    <% else %>
-      <p style="color: #888;">アドバイスを取得できませんでした。</p>
-    <% end %>
-  </div>
-  
+
 </div>
 
 <script>
-  // 月別支出合計（棒グラフ）
   new Chart(document.getElementById("monthlyExpenseChart"), {
     type: "bar",
     data: {
@@ -64,12 +57,13 @@
       datasets: [{
         label: "支出合計（円）",
         data: <%= raw @monthly_expense.map { |d| d[:amount] }.to_json %>,
-        backgroundColor: "rgba(255, 99, 132, 0.6)"
+        backgroundColor: "rgba(99, 102, 241, 0.6)",
+        borderRadius: 4
       }]
-    }
+    },
+    options: { plugins: { legend: { display: false } } }
   });
 
-  // カテゴリ別内訳（円グラフ）
   <% unless @category_expense.empty? %>
   new Chart(document.getElementById("categoryExpenseChart"), {
     type: "doughnut",
@@ -79,11 +73,14 @@
         data: <%= raw @category_expense.map { |d| d[:amount] }.to_json %>,
         backgroundColor: <%= raw @category_expense.map { |d| d[:color] }.to_json %>
       }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: "bottom" } }
     }
   });
   <% end %>
 
-  // 収支バランス（棒グラフ）
   new Chart(document.getElementById("monthlyBalanceChart"), {
     type: "bar",
     data: {
@@ -92,18 +89,20 @@
         {
           label: "収入（円）",
           data: <%= raw @monthly_balance.map { |d| d[:income] }.to_json %>,
-          backgroundColor: "rgba(54, 162, 235, 0.6)"
+          backgroundColor: "rgba(99, 102, 241, 0.6)",
+          borderRadius: 4
         },
         {
           label: "支出（円）",
           data: <%= raw @monthly_balance.map { |d| d[:expense] }.to_json %>,
-          backgroundColor: "rgba(255, 99, 132, 0.6)"
+          backgroundColor: "rgba(239, 68, 68, 0.6)",
+          borderRadius: 4
         }
       ]
     }
   });
 
-  // 日別支出推移（折れ線グラフ）
+  <% unless @daily_expense.empty? %>
   new Chart(document.getElementById("dailyExpenseChart"), {
     type: "line",
     data: {
@@ -111,10 +110,13 @@
       datasets: [{
         label: "支出（円）",
         data: <%= raw @daily_expense.map { |d| d[:amount] }.to_json %>,
-        borderColor: "rgba(255, 159, 64, 0.8)",
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        tension: 0.3
+        borderColor: "rgba(99, 102, 241, 0.8)",
+        backgroundColor: "rgba(99, 102, 241, 0.1)",
+        tension: 0.3,
+        fill: true
       }]
-    }
+    },
+    options: { plugins: { legend: { display: false } } }
   });
+  <% end %>
 </script>
