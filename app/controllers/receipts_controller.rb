@@ -47,7 +47,7 @@ class ReceiptsController < ApplicationController
 
   def correct
     @parsed = @receipt.parsed_result
-    @categories = Category.ordered
+    @categories = current_user.categories.ordered
 
     if @receipt.ledger_transaction.present?
       @transaction_form = @receipt.ledger_transaction
@@ -66,7 +66,7 @@ class ReceiptsController < ApplicationController
       @transaction = @receipt.ledger_transaction
       success = @transaction.update(register_params)
     else
-      @transaction = Transaction.new(register_params)
+      @transaction = current_user.transactions.build(register_params)
       success = @transaction.save
     end
 
@@ -78,7 +78,7 @@ class ReceiptsController < ApplicationController
       redirect_to transaction_path(@transaction), notice: "収支データを登録しました"
     else
       @parsed = @receipt.parsed_result
-      @categories = Category.ordered
+      @categories = current_user.categories.ordered
       @transaction_form = @transaction
       render :correct, status: :unprocessable_entity
     end
