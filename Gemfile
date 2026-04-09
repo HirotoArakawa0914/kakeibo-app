@@ -75,3 +75,5 @@ gem "dotenv-rails", groups: [:development, :test]
 gem "anthropic", "~> 1.0"
 
 gem "devise"
+
+gem "tailwindcss-rails"
