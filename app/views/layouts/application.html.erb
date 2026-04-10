@@ -32,9 +32,9 @@
         <div class="flex items-center gap-4">
           <% if user_signed_in? %>
             <span class="text-xs text-gray-400"><%= current_user.email %></span>
-            <%= link_to "ログアウト", destroy_user_session_path,
-                  data: { turbo_method: :delete },
-                  class: "text-sm text-gray-600 hover:text-red-500 transition" %>
+            <%= button_to "ログアウト", destroy_user_session_path,
+                  method: :delete,
+                  class: "text-sm text-gray-600 hover:text-red-500 transition bg-transparent border-0 cursor-pointer p-0" %>
           <% end %>
         </div>
       </div>
