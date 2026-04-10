@@ -18,40 +18,79 @@
   <body class="bg-gray-50 min-h-screen">
 
     <%# ナビゲーション %>
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-6">
+    <nav class="bg-white shadow-sm border-b border-gray-200" x-data="{ open: false }">
+      <div class="max-w-6xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+
+          <%# ロゴ %>
           <span class="text-lg font-bold text-indigo-600">💰 KaKeiBO</span>
-          <%= link_to "ダッシュボード", dashboard_path,
-                class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
-          <%= link_to "収支一覧", transactions_path,
-                class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
-          <%= link_to "カテゴリ管理", categories_path,
-                class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
+
+          <%# PC用メニュー %>
+          <div class="hidden md:flex items-center gap-6">
+            <%= link_to "ダッシュボード", dashboard_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
+            <%= link_to "収支一覧", transactions_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
+            <%= link_to "カテゴリ管理", categories_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition" %>
+          </div>
+
+          <%# PC用ユーザー情報 %>
+          <div class="hidden md:flex items-center gap-4">
+            <% if user_signed_in? %>
+              <span class="text-xs text-gray-400"><%= current_user.email %></span>
+              <%= button_to "ログアウト", destroy_user_session_path,
+                    method: :delete,
+                    class: "text-sm text-gray-600 hover:text-red-500 transition
+                            bg-transparent border-0 cursor-pointer p-0" %>
+            <% end %>
+          </div>
+
+          <%# スマホ用ハンバーガーボタン %>
+          <button class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                  onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+
         </div>
-        <div class="flex items-center gap-4">
-          <% if user_signed_in? %>
-            <span class="text-xs text-gray-400"><%= current_user.email %></span>
-            <%= button_to "ログアウト", destroy_user_session_path,
-                  method: :delete,
-                  class: "text-sm text-gray-600 hover:text-red-500 transition bg-transparent border-0 cursor-pointer p-0" %>
-          <% end %>
+
+        <%# スマホ用メニュー %>
+        <div id="mobile-menu" class="hidden md:hidden pt-3 pb-2 border-t border-gray-100 mt-3">
+          <div class="flex flex-col gap-3">
+            <%= link_to "ダッシュボード", dashboard_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition py-1" %>
+            <%= link_to "収支一覧", transactions_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition py-1" %>
+            <%= link_to "カテゴリ管理", categories_path,
+                  class: "text-sm text-gray-600 hover:text-indigo-600 transition py-1" %>
+            <% if user_signed_in? %>
+              <span class="text-xs text-gray-400"><%= current_user.email %></span>
+              <%= button_to "ログアウト", destroy_user_session_path,
+                    method: :delete,
+                    class: "text-sm text-red-500 bg-transparent border-0
+                            cursor-pointer p-0 text-left" %>
+            <% end %>
+          </div>
         </div>
+
       </div>
     </nav>
 
     <%# メインコンテンツ %>
-    <main class="max-w-6xl mx-auto px-4 py-8">
+    <main class="max-w-6xl mx-auto px-4 py-6">
 
       <%# フラッシュメッセージ %>
       <% if notice %>
-        <div class="mb-6 px-4 py-3 bg-green-50 border border-green-200
+        <div class="mb-4 px-4 py-3 bg-green-50 border border-green-200
                     text-green-800 rounded-lg text-sm">
           <%= notice %>
         </div>
       <% end %>
       <% if alert %>
-        <div class="mb-6 px-4 py-3 bg-red-50 border border-red-200
+        <div class="mb-4 px-4 py-3 bg-red-50 border border-red-200
                     text-red-800 rounded-lg text-sm">
           <%= alert %>
         </div>
