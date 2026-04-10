@@ -1,11 +1,69 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-bold text-gray-800">収支一覧</h1>
+  <h1 class="text-xl md:text-2xl font-bold text-gray-800">収支一覧</h1>
   <%= link_to "＋ 新規登録", new_transaction_path,
-        class: "px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg
+        class: "px-3 py-2 md:px-4 bg-indigo-600 text-white text-sm rounded-lg
                 hover:bg-indigo-700 transition" %>
 </div>
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+<%# スマホ用カード表示 %>
+<div class="md:hidden space-y-3">
+  <% @transactions.each do |transaction| %>
+    <div class="bg-white rounded-xl border border-gray-200 p-4">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500"><%= transaction.date %></span>
+        <% if transaction.transaction_type == "income" %>
+          <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">収入</span>
+        <% else %>
+          <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">支出</span>
+        <% end %>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <% if transaction.category %>
+            <span class="inline-flex items-center gap-1 text-sm text-gray-600">
+              <span class="w-2 h-2 rounded-full"
+                    style="background-color: <%= transaction.category.color %>"></span>
+              <%= transaction.category.name %>
+            </span>
+          <% else %>
+            <span class="text-sm text-gray-400">未分類</span>
+          <% end %>
+          <% if transaction.memo.present? %>
+            <p class="text-xs text-gray-400 mt-1"><%= transaction.memo %></p>
+          <% end %>
+        </div>
+        <span class="text-lg font-bold <%= transaction.transaction_type == 'income' ? 'text-blue-600' : 'text-red-600' %>">
+          <%= number_with_delimiter(transaction.amount) %>円
+        </span>
+      </div>
+      <div class="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100">
+        <% if transaction.receipt.present? %>
+          <%= link_to "📄 レシート", receipt_path(transaction.receipt),
+                class: "text-xs text-gray-500 hover:text-indigo-600" %>
+        <% end %>
+        <%= link_to "詳細", transaction_path(transaction),
+              class: "text-xs text-gray-500 hover:text-indigo-600" %>
+        <%= link_to "編集", edit_transaction_path(transaction),
+              class: "text-xs text-gray-500 hover:text-indigo-600" %>
+        <%= button_to "削除", transaction_path(transaction),
+              method: :delete,
+              data: { turbo_confirm: "削除しますか？" },
+              class: "text-xs text-red-400 hover:text-red-600
+                      bg-transparent border-0 cursor-pointer p-0" %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @transactions.empty? %>
+    <div class="text-center py-12 text-gray-400">
+      <p class="text-lg mb-2">まだ収支データがありません</p>
+      <p class="text-sm">「＋ 新規登録」から追加してください</p>
+    </div>
+  <% end %>
+</div>
+
+<%# PC用テーブル表示 %>
+<div class="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
   <table class="w-full text-sm">
     <thead class="bg-gray-50 border-b border-gray-200">
       <tr>
@@ -60,7 +118,8 @@
               <%= button_to "削除", transaction_path(transaction),
                     method: :delete,
                     data: { turbo_confirm: "削除しますか？" },
-                    class: "text-xs text-gray-500 hover:text-red-500 transition bg-transparent border-0 cursor-pointer p-0" %>
+                    class: "text-xs text-gray-500 hover:text-red-500 transition
+                            bg-transparent border-0 cursor-pointer p-0" %>
             </div>
           </td>
         </tr>
