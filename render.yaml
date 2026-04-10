@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: kakeibo-app
+    runtime: ruby
+    buildCommand: bundle install && bundle exec rails tailwindcss:build && bundle exec rails assets:precompile && bundle exec rails db:migrate RAILS_ENV=production
+    startCommand: bundle exec rails server -b 0.0.0.0
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
