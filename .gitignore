@@ -41,5 +41,5 @@ db/test.sqlite3-wal
 /config/*.key
 
 /config/gcloud-vision.json
-/app/assets/builds/*
+/app/assets/builds/tailwind/
 !/app/assets/builds/.keep
