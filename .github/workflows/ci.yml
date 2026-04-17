@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: コードをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Rubyをセットアップ
         uses: ruby/setup-ruby@v1
