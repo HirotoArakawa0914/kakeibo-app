@@ -72,7 +72,7 @@ gem "active_storage_validations"
 
 gem "dotenv-rails", groups: [:development, :test]
 
-gem "anthropic", "~> 1.0"
+gem "anthropic", "~> 1.35"
 
 gem "devise"
 
